@@ -7,7 +7,8 @@ import Web.Slack
 import Web.Slack.Message
 
 import Data.Acid
-import Data.Text as T hiding (length, map)
+import qualified Data.Text as T
+import Data.Text (Text, pack)
 import Control.Lens
 import Control.Monad.IO.Class
 import System.Random
@@ -50,7 +51,8 @@ runCommand cid ListLunchPlaces =
      lunchPlaces <- liftIO $ query acid LookupPlaces
      if lunchPlaces == []
        then sendMessage cid "Oh no! No lunch places! Add one with !addplace"
-       else sendMessage cid (T.concat ["Here are the lunch places: ", T.intercalate ", " (map quote lunchPlaces)])
+       else sendMessage cid (T.concat ("Here are the lunch places:" : zipWith showPlace [1..] lunchPlaces))
+       where showPlace i p = T.concat ["\n    ", (pack (show i)), ". ", p]
 
 runCommand cid ListSnacks =
   do acid <- use userState
