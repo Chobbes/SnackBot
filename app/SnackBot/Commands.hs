@@ -17,8 +17,10 @@ import System.Random
 data Command
   = LunchSuggest
   | AddLunchPlace Text
+  | RemovePlace Text
   | ListLunchPlaces
   | AddSnack Text
+  | RemoveSnack Text
   | ListSnacks
   | AddRecipe Text
   | BotSnack
@@ -63,7 +65,7 @@ runCommand cid ListSnacks =
 
 runCommand cid Help =
   sendMessage cid (T.intercalate ", " (map quote commands))
-  where commands = ["!help", "!suggest", "!addplace", "!addsnack", "!listplaces", "!listsnacks", "!botsnack", "!hv"]
+  where commands = ["!help", "!suggest", "!addplace", "!rmplace", "!addsnack", "!rmsnack", "!listplaces", "!listsnacks", "!botsnack", "!hv"]
 
 runCommand cid BotSnack =
   sendMessage cid ":)"
