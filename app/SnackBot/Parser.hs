@@ -21,7 +21,7 @@ addPlace = AddLunchPlace <$> (string "!addplace" *> skipMany1 space *> takeText)
 
 
 removePlace :: Parser Command
-removePlace = RemovePlace <$> (string "!rmplace" *> skipMany1 space *> takeText)
+removePlace = RemovePlaceCommand <$> (string "!rmplace" *> skipMany1 space *> takeText)
 
 
 addSnack :: Parser Command
@@ -29,7 +29,7 @@ addSnack = AddSnack <$> (string "!addsnack" *> skipMany1 space *> takeText)
 
 
 removeSnack :: Parser Command
-removeSnack = RemoveSnack <$> (string "!rmsnack" *> skipMany1 space *> takeText)
+removeSnack = RemoveSnackCommand <$> (string "!rmsnack" *> skipMany1 space *> takeText)
 
 
 listPlaces:: Parser Command

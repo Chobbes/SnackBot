@@ -17,10 +17,10 @@ import System.Random
 data Command
   = LunchSuggest
   | AddLunchPlace Text
-  | RemovePlace Text
+  | RemovePlaceCommand Text
   | ListLunchPlaces
   | AddSnack Text
-  | RemoveSnack Text
+  | RemoveSnackCommand Text
   | ListSnacks
   | AddRecipe Text
   | BotSnack
@@ -43,10 +43,28 @@ runCommand cid (AddLunchPlace place) =
      liftIO $ update acid (InsertPlace place)
      sendMessage cid (T.concat ["\"", place, "\" has been added to the list of lunch places!"])
 
+runCommand cid (RemovePlaceCommand place) =
+  do acid <- use userState
+     lunchPlaces <- liftIO $ query acid LookupPlaces
+     if place `elem` lunchPlaces
+       then if place == "High Voltage"
+               then sendMessage cid "I can't let you do that."
+               else do liftIO $ update acid (RemovePlace place)
+                       sendMessage cid (T.concat ["I have forgotten ", "\"", place, ".\"", " Let us never speak of this again."])
+       else sendMessage cid (T.concat ["\"", place, "\" isn't isn't in the list of lunch places."])
+
 runCommand cid (AddSnack snack) =
   do acid <- use userState
      liftIO $ update acid (InsertSnack snack)
      sendMessage cid (T.concat ["\"", snack, "\" has been added to the list of requested snacks!"])
+
+runCommand cid (RemoveSnackCommand snack) =
+  do acid <- use userState
+     snacks <- liftIO $ query acid LookupSnacks
+     if snack `elem` snacks
+       then do liftIO $ update acid (RemoveSnack snack)
+               sendMessage cid (T.concat ["I have forgotten ", "\"", snack, ".\"", " "])
+       else sendMessage cid (T.concat ["I have never heard of this \"", snack, "!\""])
 
 runCommand cid ListLunchPlaces =
   do acid <- use userState
