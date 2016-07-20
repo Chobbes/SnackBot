@@ -51,7 +51,7 @@ runCommand cid (RemovePlaceCommand place) =
                then sendMessage cid "I can't let you do that."
                else do liftIO $ update acid (RemovePlace place)
                        sendMessage cid (T.concat ["I have forgotten ", "\"", place, ".\"", " Let us never speak of this again."])
-       else sendMessage cid (T.concat ["\"", place, "\" isn't isn't in the list of lunch places."])
+       else sendMessage cid (T.concat ["\"", place, "\" isn't a place that I know about."])
 
 runCommand cid (AddSnack snack) =
   do acid <- use userState
