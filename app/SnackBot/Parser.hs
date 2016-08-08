@@ -9,7 +9,7 @@ import Control.Applicative
 
 
 parseCommands :: Parser Command
-parseCommands = suggest <|> addPlace <|> removePlace <|> addSnack <|> removeSnack <|> listPlaces <|> listSnacks <|> botSnack <|> help <|> highVoltage
+parseCommands = suggest <|> addPlace <|> removePlace <|> addSnack <|> removeSnack <|> listPlaces <|> listSnacks <|> botSnack <|> help <|> highVoltage <|> delayedHello
 
 
 suggest :: Parser Command
@@ -50,3 +50,7 @@ highVoltage = string "!hv" *> endOfInput *> return HighVoltage
 
 help :: Parser Command
 help = string "!help" *> endOfInput *> return Help
+
+
+delayedHello :: Parser Command
+delayedHello = string "!delayed" *> return DelayedHello

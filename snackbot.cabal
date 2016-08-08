@@ -2,7 +2,7 @@ name:                snackbot
 version:             0.1.0.0
 synopsis:            A bot for suggesting food in Slack.
 description:         Please see README.md
-license:             BSD3
+license:             LGPL
 license-file:        LICENSE
 author:              Calvin Beck
 maintainer:          cbeck@drivewyze.com
@@ -28,4 +28,5 @@ executable snackbot
                      , acid-state >= 0.14.1 && < 0.15
                      , safecopy >= 0.9.1 && < 0.10
                      , mtl >= 2.2.1 && < 2.3
+                     , monadIO >= 0.10.1.4 && < 0.11
   default-language:    Haskell2010

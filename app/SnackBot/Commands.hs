@@ -11,7 +11,21 @@ import qualified Data.Text as T
 import Data.Text (Text, pack)
 import Control.Lens
 import Control.Monad.IO.Class
+import Control.Concurrent.MonadIO
+import Control.Monad
+import Control.Monad.Trans.Class
+import Control.Monad.State.Lazy
 import System.Random
+
+
+instance HasFork (Slack s) where
+  fork slack = Slack . fork $ runSlack slack
+                                      
+
+instance HasFork m => HasFork (StateT s m) where
+  fork state = StateT $ \initial ->
+                         do thread <- fork $ (evalStateT state initial)
+                            return (thread, initial)
 
 
 data Command
@@ -25,6 +39,7 @@ data Command
   | AddRecipe Text
   | BotSnack
   | HighVoltage
+  | DelayedHello
   | Help
 
 
@@ -91,7 +106,10 @@ runCommand cid BotSnack =
 runCommand cid HighVoltage =
   sendMessage cid "High Voltage"
 
+runCommand cid DelayedHello = sendDelayed cid 5000 "Hello!"
+
 runCommand cid _ = return ()
+
 
 
 pickRandom :: [a] -> IO (Maybe a)
@@ -109,3 +127,10 @@ pickRandom xs = do i <- randomRIO (0, length xs - 1)
 
 quote :: Text -> Text
 quote text = T.concat ["\"", text, "\""]
+
+
+sendDelayed :: ChannelId -> Int -> Text -> Slack s ()
+sendDelayed cid delay message =
+  do fork $ do threadDelay (delay * 1000)
+               sendMessage cid message
+     return ()

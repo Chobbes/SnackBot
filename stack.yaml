@@ -43,6 +43,7 @@ packages:
 extra-deps:
 - aeson-coerce-0.1.0.0
 - slack-api-0.9
+- monadIO-0.10.1.4
 
 # Override default flag values for local packages and extra-deps
 flags: {}
